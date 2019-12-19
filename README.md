@@ -1,0 +1,2 @@
+# woocommerce_gateway_credomatic
+woocommerce gateway credomatic browser redirect
