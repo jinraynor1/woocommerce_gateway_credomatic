@@ -1,2 +1,2 @@
 # woocommerce_gateway_credomatic
-woocommerce gateway credomatic browser redirect
+Custom woocommerce payment only works with browser redirect.
