@@ -16,9 +16,6 @@ Author URI: https://mihost.com/
       session_start();
     }
 
-  //solo para prueba de otro code
- // define('WOOCOMMERCE_DOTPAY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
- // define('WOOCOMMERCE_DOTPAY_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 
     // If the parent WC_Payment_Gateway class doesn't exist
     // it means WooCommerce is not installed on the site
