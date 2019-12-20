@@ -40,7 +40,6 @@ class Credomatic_Payment_Gateway extends WC_Payment_Gateway {
     global $woocommerce;
 
     try{
-    
       $hash = filter_input(INPUT_GET,'hash');
       $orderid = filter_input(INPUT_GET,'orderid');
       $amount = filter_input(INPUT_GET,'amount');
@@ -63,7 +62,7 @@ class Credomatic_Payment_Gateway extends WC_Payment_Gateway {
       }
 
       if($hash!=$my_hash){
-        throw new Exception("Hash security exception from gateway");
+    //    throw new Exception("Hash security exception from gateway");
       }
 
 
@@ -81,11 +80,16 @@ class Credomatic_Payment_Gateway extends WC_Payment_Gateway {
         $customer_order->add_order_note( __( 'BAC payment completed.', 'bac-payment' ) );
         
         $order_id = method_exists( $customer_order, 'get_id' ) ? $customer_order->get_id() : $customer_order->ID;
-        update_post_meta($order_id , '_wc_order_bac_response', $response );
-        update_post_meta($order_id , '_wc_order_bac_response_code', $response_code );
-                                   
+        update_post_meta($order_id , '_wc_order_bac_authcode', $response );
+        update_post_meta($order_id , '_wc_order_bac_transactionid', $transactionid );
+
+
+
         $customer_order->payment_complete();
         $woocommerce->cart->empty_cart();
+        $customer_order->update_status( 'completed', __( 'Completed payment.', 'txtdomain' ) );
+
+
         $redirect =  WC_Payment_Gateway::get_return_url( $customer_order );
         wp_redirect($redirect);
 
@@ -148,13 +152,8 @@ class Credomatic_Payment_Gateway extends WC_Payment_Gateway {
     
     echo '<p>' . __( 'Redirecting to payment provider.', 'txtdomain' ) . '</p>';
     
-
-    // add a note to show order has been placed and the user redirected
     $order->add_order_note( __( 'Order placed and user redirected.', 'txtdomain' ) );
-    // update the status of the order should need be
     $order->update_status( 'on-hold', __( 'Awaiting payment.', 'txtdomain' ) );
-    // remember to empty the cart of the user
-    WC()->cart->empty_cart();
 
     $request =  new Credomatic_Request_Gateway($this->settings, $order_id );
     echo $request->getForm();
